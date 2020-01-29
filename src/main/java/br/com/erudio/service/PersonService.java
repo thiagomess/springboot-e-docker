@@ -1,62 +1,55 @@
 package br.com.erudio.service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import br.com.erudio.exceptions.DataIntegrityException;
+import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.model.Person;
+import br.com.erudio.repository.PersonRepository;
 
 @Service
 public class PersonService {
 
-	private final AtomicLong counter = new AtomicLong();
-	
-	
+	@Autowired
+	private PersonRepository repository;
+
 	public Person createPerson(Person person) {
-		return person;
+		return repository.save(person);
 	}
-	
+
 	public Person updatePerson(Person person) {
-		return person;
+		Person p = findById(person.getId());
+		updateData(person, p);
+		return repository.save(person);
 	}
-	
-	public void deletePerson(String id) {
-		
-	}
-	
-	public Person findById(String id) {
-		Person person = new Person();
-		person.setId(counter.incrementAndGet());
-		person.setFirstName("Thiago");
-		person.setLastName("Gomes");
-		person.setAndress("Sao Paulo");
-		person.setGender("male");
-		return person ;
-	}
-	
-	
-	public List<Person> findAll() {
-		List<Person> persons = new ArrayList<>();
-		
-		for (int i = 0; i < 8; i++) {
-			Person person = mockPerson(i);
-			persons.add(person);
-			
+
+	public void deletePerson(Long id) {
+		findById(id);
+		try {
+			repository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			throw new DataIntegrityException("Não é possível excluir devido ter dados relacionados.");
 		}
-		return persons;
 	}
 
+	public Person findById(Long id) {
 
-	private Person mockPerson(int i) {
-		Person person = new Person();
-		person.setId(counter.incrementAndGet());
-		person.setFirstName("Person name " + i);
-		person.setLastName("Last name");
-		person.setAndress("Sao Paulo");
-		person.setGender("male");
-		return person ;
+		return repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado com esse id"));
 	}
 
+	public List<Person> findAll() {
+		return repository.findAll();
+	}
+
+	private void updateData(Person person, Person p) {
+		p.setFirstName(person.getFirstName());
+		p.setLastName(person.getLastName());
+		p.setAndress(person.getAndress());
+		p.setGender(person.getGender());
+	}
 }
