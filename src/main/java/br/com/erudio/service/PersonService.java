@@ -7,8 +7,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import br.com.erudio.converts.DozerConverter;
+import br.com.erudio.converts.custom.PersonConverter;
 import br.com.erudio.data.model.Person;
 import br.com.erudio.data.vo.PersonVO;
+import br.com.erudio.data.vo.PersonVO2;
 import br.com.erudio.exceptions.DataIntegrityException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.repository.PersonRepository;
@@ -19,20 +21,29 @@ public class PersonService {
 	@Autowired
 	private PersonRepository repository;
 
+	@Autowired
+	private PersonConverter converter;
+
 	public PersonVO createPerson(PersonVO person) {
 		var entity = DozerConverter.parseObject(person, Person.class);
 		Person vo = repository.save(entity);
 		return DozerConverter.parseObject(vo, PersonVO.class);
 	}
 
+	public PersonVO2 createPersonV2(PersonVO2 person) {
+		var entity = converter.convertVOToEntity(person);
+		Person vo = repository.save(entity);
+		return converter.convertEntityToVO(vo);
+	}
+
 	public PersonVO updatePerson(PersonVO person) {
 		PersonVO p = findById(person.getId());
 		updateData(person, p);
-		
+
 		var entity = DozerConverter.parseObject(person, Person.class);
 		Person vo = repository.save(entity);
 		return DozerConverter.parseObject(vo, PersonVO.class);
-		
+
 	}
 
 	public void deletePerson(Long id) {
@@ -46,9 +57,9 @@ public class PersonService {
 
 	public PersonVO findById(Long id) {
 
-		 Person entity = repository.findById(id)
+		Person entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado com esse id"));
-		 return DozerConverter.parseObject(entity, PersonVO.class);
+		return DozerConverter.parseObject(entity, PersonVO.class);
 	}
 
 	public List<PersonVO> findAll() {

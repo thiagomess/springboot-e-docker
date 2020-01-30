@@ -1,57 +1,33 @@
-package br.com.erudio.data.model;
+package br.com.erudio.data.vo;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-@Entity
-@Table(name = "person")
-public class Person implements Serializable {
+public class PersonVO2 implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column(name = "first_name", nullable = false, length = 80)
 	private String firstName;
-	@Column(name = "last_name", nullable = false, length = 80)
 	private String lastName;
-	@Column(nullable = false, length = 100)
 	private String address;
-	@Column(nullable = false, length = 6)
 	private String gender;
-	@Column(nullable = true)
+	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate birthday;
 
-	public Person(Long id, String firstName, String lastName, String address, String gender, LocalDate birtday) {
-		this.id = id;
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.address = address;
-		this.gender = gender;
-		this.birthday = birtday;
+	public PersonVO2() {
 	}
-	
 
-	public Person(Long id, String firstName, String lastName, String address, String gender) {
+	public PersonVO2(Long id, String firstName, String lastName, String address, String gender, LocalDate birthday) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.gender = gender;
-	}
-
-
-
-	public Person() {
+		this.birthday = birthday;
 	}
 
 	public Long getId() {
@@ -123,7 +99,7 @@ public class Person implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Person other = (Person) obj;
+		PersonVO2 other = (PersonVO2) obj;
 		if (address == null) {
 			if (other.address != null)
 				return false;

@@ -14,10 +14,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.data.vo.PersonVO;
+import br.com.erudio.data.vo.PersonVO2;
 import br.com.erudio.service.PersonService;
 
 @RestController
-@RequestMapping(value = "/person")
+@RequestMapping(value = "/person/v1")
 public class PersonController {
 
 	@Autowired
@@ -37,7 +38,7 @@ public class PersonController {
 	public PersonVO create(@RequestBody PersonVO person) {
 		return service.createPerson(person);
 	}
-
+	
 	@PutMapping
 	public PersonVO update(@RequestBody PersonVO person) {
 		return service.updatePerson(person);
