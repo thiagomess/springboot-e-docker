@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import br.com.erudio.converts.DozerConverter;
+import br.com.erudio.data.model.Person;
+import br.com.erudio.data.vo.PersonVO;
 import br.com.erudio.exceptions.DataIntegrityException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
-import br.com.erudio.model.Person;
 import br.com.erudio.repository.PersonRepository;
 
 @Service
@@ -17,14 +19,20 @@ public class PersonService {
 	@Autowired
 	private PersonRepository repository;
 
-	public Person createPerson(Person person) {
-		return repository.save(person);
+	public PersonVO createPerson(PersonVO person) {
+		var entity = DozerConverter.parseObject(person, Person.class);
+		Person vo = repository.save(entity);
+		return DozerConverter.parseObject(vo, PersonVO.class);
 	}
 
-	public Person updatePerson(Person person) {
-		Person p = findById(person.getId());
+	public PersonVO updatePerson(PersonVO person) {
+		PersonVO p = findById(person.getId());
 		updateData(person, p);
-		return repository.save(person);
+		
+		var entity = DozerConverter.parseObject(person, Person.class);
+		Person vo = repository.save(entity);
+		return DozerConverter.parseObject(vo, PersonVO.class);
+		
 	}
 
 	public void deletePerson(Long id) {
@@ -36,20 +44,21 @@ public class PersonService {
 		}
 	}
 
-	public Person findById(Long id) {
+	public PersonVO findById(Long id) {
 
-		return repository.findById(id)
+		 Person entity = repository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado com esse id"));
+		 return DozerConverter.parseObject(entity, PersonVO.class);
 	}
 
-	public List<Person> findAll() {
-		return repository.findAll();
+	public List<PersonVO> findAll() {
+		return DozerConverter.parseListObjects(repository.findAll(), PersonVO.class);
 	}
 
-	private void updateData(Person person, Person p) {
+	private void updateData(PersonVO person, PersonVO p) {
 		p.setFirstName(person.getFirstName());
 		p.setLastName(person.getLastName());
-		p.setAndress(person.getAndress());
+		p.setAddress(person.getAddress());
 		p.setGender(person.getGender());
 	}
 }
