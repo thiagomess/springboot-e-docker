@@ -2,15 +2,24 @@ package br.com.erudio.data.vo;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({"id", "address","first_name","last_name","gender"}) //altera ordem de exibição do json
 public class PersonVO implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@JsonProperty("first_name") //Altera nome no json
 	private String firstName;
+	@JsonProperty("last_name")
 	private String lastName;
 	private String address;
 	private String gender;
+	@JsonIgnore //igona item do json
+	private String ignorado;
 
 	public PersonVO(Long id, String firstName, String lastName, String address, String gender) {
 		this.id = id;
@@ -61,6 +70,14 @@ public class PersonVO implements Serializable {
 
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+	
+	public String getIgnorado() {
+		return ignorado;
+	}
+
+	public void setIgnorado(String ignorado) {
+		this.ignorado = ignorado;
 	}
 
 	@Override

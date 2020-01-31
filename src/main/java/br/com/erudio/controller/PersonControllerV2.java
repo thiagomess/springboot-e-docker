@@ -10,7 +10,7 @@ import br.com.erudio.data.vo.PersonVO2;
 import br.com.erudio.service.PersonService;
 
 @RestController
-@RequestMapping(value = "/person/v2")
+@RequestMapping(value = "/api/v2/person")
 public class PersonControllerV2 {
 
 	@Autowired
