@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.data.vo.PersonVO;
-import br.com.erudio.data.vo.PersonVO2;
 import br.com.erudio.service.PersonService;
 
 @RestController

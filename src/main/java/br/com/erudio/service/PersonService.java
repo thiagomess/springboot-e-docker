@@ -1,6 +1,7 @@
 package br.com.erudio.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -28,12 +29,6 @@ public class PersonService {
 		var entity = DozerConverter.parseObject(person, Person.class);
 		Person vo = repository.save(entity);
 		return DozerConverter.parseObject(vo, PersonVO.class);
-	}
-
-	public PersonVO2 createPersonV2(PersonVO2 person) {
-		var entity = converter.convertVOToEntity(person);
-		Person vo = repository.save(entity);
-		return converter.convertEntityToVO(vo);
 	}
 
 	public PersonVO updatePerson(PersonVO person) {
@@ -72,4 +67,42 @@ public class PersonService {
 		p.setAddress(person.getAddress());
 		p.setGender(person.getGender());
 	}
+
+	// API v2
+
+	public PersonVO2 createPersonV2(PersonVO2 person) {
+		var entity = converter.convertVOToEntity(person);
+		Person vo = repository.save(entity);
+		return converter.convertEntityToVO(vo);
+	}
+
+	public PersonVO2 updatePersonV2(PersonVO2 person) {
+		PersonVO2 p = findByIdV2(person.getId());
+		updateDataV2(person, p);
+
+		var entity = converter.convertVOToEntity(person);
+		Person vo = repository.save(entity);
+		return converter.convertEntityToVO(vo);
+
+	}
+
+	public PersonVO2 findByIdV2(Long id) {
+
+		Person entity = repository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Nenhum registro encontrado com esse id"));
+		return converter.convertEntityToVO(entity);
+	}
+
+	public List<PersonVO2> findAllV2() {
+		return repository.findAll().stream().map(obj -> converter.convertEntityToVO(obj)).collect(Collectors.toList());
+	}
+
+	private void updateDataV2(PersonVO2 person, PersonVO2 p) {
+		p.setFirstName(person.getFirstName());
+		p.setLastName(person.getLastName());
+		p.setAddress(person.getAddress());
+		p.setGender(person.getGender());
+		p.setBirthday(person.getBirthday());
+	}
+
 }
