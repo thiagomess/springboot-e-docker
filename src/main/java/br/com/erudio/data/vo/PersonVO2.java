@@ -3,9 +3,11 @@ package br.com.erudio.data.vo;
 import java.io.Serializable;
 import java.time.LocalDate;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-public class PersonVO2 implements Serializable {
+public class PersonVO2 extends RepresentationModel<PersonVO2> implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 

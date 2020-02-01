@@ -1,5 +1,8 @@
 package br.com.erudio.controller;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +28,44 @@ public class PersonControllerV2 {
 
 	@GetMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 findById(@PathVariable("id") Long id) {
-		return service.findByIdV2(id);
+		PersonVO2 personVO2 = service.findByIdV2(id);
+
+		// adicionando HATEOAS - tem que adicionar os imports static
+		personVO2.add(linkTo(methodOn(PersonControllerV2.class).findById(id)).withSelfRel());
+		return personVO2;
 	}
 
 	@GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
 	public List<PersonVO2> findAll() {
-		return service.findAllV2();
+		 List<PersonVO2> listPerson = service.findAllV2();
+		 listPerson.stream().forEach(p -> p.add(
+					linkTo(methodOn(PersonControllerV2.class).findById(p.getId())).withSelfRel(),
+					 linkTo(methodOn(PersonControllerV2.class).update(p)).withRel("update"),
+					 linkTo(methodOn(PersonControllerV2.class).delete(p.getId())).withRel("delete")
+					));
+			return listPerson;
 	}
 
 	@PostMapping(produces = { "application/json", "application/xml", "application/x-yaml" }, 
 				consumes = {"application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 create(@RequestBody PersonVO2 person) {
-		return service.createPersonV2(person);
+		PersonVO2 personVO2 = service.createPersonV2(person);
+		personVO2.add
+		(linkTo(methodOn(PersonControllerV2.class).findById(personVO2.getId())).withSelfRel(),
+		 linkTo(methodOn(PersonControllerV2.class).update(personVO2)).withRel("update"),
+		 linkTo(methodOn(PersonControllerV2.class).delete(personVO2.getId())).withRel("delete"));
+		return personVO2;
 	}
 
 	@PutMapping(produces = { "application/json", "application/xml", "application/x-yaml" }, 
 				consumes = {"application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 update(@RequestBody PersonVO2 person) {
-		return service.updatePersonV2(person);
+		PersonVO2 personVO2 = service.updatePersonV2(person);
+		personVO2.add
+		(linkTo(methodOn(PersonControllerV2.class).findById(personVO2.getId())).withSelfRel(),
+		 linkTo(methodOn(PersonControllerV2.class).update(personVO2)).withRel("update"),
+		 linkTo(methodOn(PersonControllerV2.class).delete(personVO2.getId())).withRel("delete"));
+		return personVO2;
 	}
 
 	@DeleteMapping
