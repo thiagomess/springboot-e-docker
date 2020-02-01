@@ -18,7 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.data.vo.PersonVO2;
 import br.com.erudio.service.PersonService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
+@Api(value = "Endpoint person v2", description = "Endpoint person v1", tags = {"personEndpointV2"})
 @RestController
 @RequestMapping(value = "/api/v2/person")
 public class PersonControllerV2 {
@@ -26,6 +29,7 @@ public class PersonControllerV2 {
 	@Autowired
 	private PersonService service;
 
+	@ApiOperation(value = "Find for id")
 	@GetMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 findById(@PathVariable("id") Long id) {
 		PersonVO2 personVO2 = service.findByIdV2(id);
@@ -35,6 +39,7 @@ public class PersonControllerV2 {
 		return personVO2;
 	}
 
+	@ApiOperation(value = "Find all person")
 	@GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
 	public List<PersonVO2> findAll() {
 		 List<PersonVO2> listPerson = service.findAllV2();
@@ -46,6 +51,7 @@ public class PersonControllerV2 {
 			return listPerson;
 	}
 
+	@ApiOperation(value = "Include person")
 	@PostMapping(produces = { "application/json", "application/xml", "application/x-yaml" }, 
 				consumes = {"application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 create(@RequestBody PersonVO2 person) {
@@ -57,6 +63,7 @@ public class PersonControllerV2 {
 		return personVO2;
 	}
 
+	@ApiOperation(value = "Update person")
 	@PutMapping(produces = { "application/json", "application/xml", "application/x-yaml" }, 
 				consumes = {"application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 update(@RequestBody PersonVO2 person) {
@@ -68,6 +75,7 @@ public class PersonControllerV2 {
 		return personVO2;
 	}
 
+	@ApiOperation(value = "Delete person")
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		service.deletePerson(id);

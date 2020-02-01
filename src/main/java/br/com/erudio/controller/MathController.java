@@ -8,7 +8,9 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.erudio.converts.NumberConvert;
 import br.com.erudio.exceptions.UnsupportedMathOperationException;
 import br.com.erudio.service.SimpleMath;
+import io.swagger.annotations.Api;
 
+@Api(hidden = true)
 @RestController
 public class MathController {
 	
