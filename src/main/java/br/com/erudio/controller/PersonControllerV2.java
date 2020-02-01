@@ -68,7 +68,7 @@ public class PersonControllerV2 {
 		return personVO2;
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		service.deletePerson(id);
 		return ResponseEntity.noContent().build();
