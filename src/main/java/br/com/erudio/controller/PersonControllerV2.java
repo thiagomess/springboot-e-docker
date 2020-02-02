@@ -21,6 +21,7 @@ import br.com.erudio.service.PersonService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+//@CrossOrigin Permite cross somente nesta classe
 @Api(value = "Endpoint person v2", description = "Endpoint person v1", tags = {"personEndpointV2"})
 @RestController
 @RequestMapping(value = "/api/v2/person")
@@ -29,6 +30,7 @@ public class PersonControllerV2 {
 	@Autowired
 	private PersonService service;
 
+	//@CrossOrigin Permite cross somente neste metodo
 	@ApiOperation(value = "Find for id")
 	@GetMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/x-yaml" })
 	public PersonVO2 findById(@PathVariable("id") Long id) {
@@ -38,7 +40,7 @@ public class PersonControllerV2 {
 		personVO2.add(linkTo(methodOn(PersonControllerV2.class).findById(id)).withSelfRel());
 		return personVO2;
 	}
-
+//	@CrossOrigin(origins = {"http://localhost8080","http//google.com"})// Permite cross somente neste metodo para esses sites
 	@ApiOperation(value = "Find all person")
 	@GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
 	public List<PersonVO2> findAll() {
