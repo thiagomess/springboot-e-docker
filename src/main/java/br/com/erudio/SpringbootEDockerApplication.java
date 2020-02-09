@@ -12,6 +12,10 @@ public class SpringbootEDockerApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringbootEDockerApplication.class, args);
+//		BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder(16);
+//		String result = bCryptPasswordEncoder.encode("admin123");
+//		System.out.println("My hash " + result);
+	
 	}
-
+	
 }

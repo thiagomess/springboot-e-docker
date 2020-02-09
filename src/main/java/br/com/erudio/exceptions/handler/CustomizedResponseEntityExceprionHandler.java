@@ -21,7 +21,7 @@ public class CustomizedResponseEntityExceprionHandler extends ResponseEntityExce
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ExceptionResponse> handleAllException(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
-				"Erro na aplicação", ex.getMessage(), request.getDescription(false));
+				"Erro na aplicacao", ex.getMessage(), request.getDescription(false));
 
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
@@ -29,7 +29,7 @@ public class CustomizedResponseEntityExceprionHandler extends ResponseEntityExce
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public final ResponseEntity<ExceptionResponse> handleNotFound(Exception ex, WebRequest request) {
 		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.value(),
-				"Não encontrado", ex.getMessage(), request.getDescription(false));
+				"Nao encontrado", ex.getMessage(), request.getDescription(false));
 
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
@@ -41,4 +41,5 @@ public class CustomizedResponseEntityExceprionHandler extends ResponseEntityExce
 
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
 	}
+	
 }
