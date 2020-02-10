@@ -16,13 +16,15 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 	private String lastName;
 	private String address;
 	private String gender;
+	private boolean enabled;
 	@JsonFormat(pattern = "dd/MM/yyyy")
 	private LocalDate birthday;
+	
 
 	public PersonVO2() {
 	}
 
-	public PersonVO2(Long id, String firstName, String lastName, String address, String gender, LocalDate birthday) {
+	public PersonVO2(Long id, String firstName, String lastName, String address, String gender, LocalDate birthday, boolean enabled) {
 		super();
 		this.id = id;
 		this.firstName = firstName;
@@ -30,6 +32,7 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 		this.address = address;
 		this.gender = gender;
 		this.birthday = birthday;
+		this.enabled = enabled;
 	}
 
 	public Long getId() {
@@ -72,6 +75,14 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 		this.gender = gender;
 	}
 
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
 	public LocalDate getBirthday() {
 		return birthday;
 	}
@@ -83,9 +94,10 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((birthday == null) ? 0 : birthday.hashCode());
+		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
@@ -97,7 +109,7 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
@@ -111,6 +123,8 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 			if (other.birthday != null)
 				return false;
 		} else if (!birthday.equals(other.birthday))
+			return false;
+		if (enabled != other.enabled)
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
@@ -135,4 +149,5 @@ public class PersonVO2 extends RepresentationModel<PersonVO2> implements Seriali
 		return true;
 	}
 
+	
 }

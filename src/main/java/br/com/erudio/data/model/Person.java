@@ -28,15 +28,18 @@ public class Person implements Serializable {
 	@Column(nullable = false, length = 6)
 	private String gender;
 	@Column(nullable = true)
+	private boolean enabled;
+	@Column(nullable = true)
 	private LocalDate birthday;
 
-	public Person(Long id, String firstName, String lastName, String address, String gender, LocalDate birtday) {
+	public Person(Long id, String firstName, String lastName, String address, String gender, LocalDate birtday, boolean enabled) {
 		this.id = id;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.address = address;
 		this.gender = gender;
 		this.birthday = birtday;
+		this.enabled = enabled;
 	}
 	
 
@@ -102,18 +105,31 @@ public class Person implements Serializable {
 		this.birthday = birthday;
 	}
 
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((address == null) ? 0 : address.hashCode());
 		result = prime * result + ((birthday == null) ? 0 : birthday.hashCode());
+		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
 		result = prime * result + ((gender == null) ? 0 : gender.hashCode());
 		result = prime * result + ((id == null) ? 0 : id.hashCode());
 		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
 		return result;
 	}
+
 
 	@Override
 	public boolean equals(Object obj) {
@@ -133,6 +149,8 @@ public class Person implements Serializable {
 			if (other.birthday != null)
 				return false;
 		} else if (!birthday.equals(other.birthday))
+			return false;
+		if (enabled != other.enabled)
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
@@ -156,5 +174,7 @@ public class Person implements Serializable {
 			return false;
 		return true;
 	}
+
+	
 
 }

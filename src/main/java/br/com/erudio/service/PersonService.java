@@ -3,9 +3,12 @@ package br.com.erudio.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.print.attribute.standard.Fidelity;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.erudio.converts.DozerConverter;
 import br.com.erudio.converts.custom.PersonConverter;
@@ -95,6 +98,12 @@ public class PersonService {
 
 	public List<PersonVO2> findAllV2() {
 		return repository.findAll().stream().map(obj -> converter.convertEntityToVO(obj)).collect(Collectors.toList());
+	}
+	
+	@Transactional //Devido ser uma query de modificação que não é padrao, tem que colocar Transactional
+	public PersonVO2 disablePersonV2(Long id) {
+		repository.disablePersons(id);
+		return	findByIdV2(id);
 	}
 
 	private void updateDataV2(PersonVO2 person, PersonVO2 p) {

@@ -5,10 +5,13 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import java.util.List;
 
+import javax.sound.midi.Patch;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -82,6 +85,17 @@ public class PersonControllerV2 {
 	public ResponseEntity<?> delete(@PathVariable("id") Long id) {
 		service.deletePerson(id);
 		return ResponseEntity.noContent().build();
+	}
+	
+	@ApiOperation(value = "Disable person")
+	@PatchMapping(value = "/{id}", produces = { "application/json", "application/xml", "application/x-yaml" })
+	public PersonVO2 disablePerson(@PathVariable("id") Long id) {
+		PersonVO2 personVO2 = service.disablePersonV2(id);
+		personVO2.add
+		(linkTo(methodOn(PersonControllerV2.class).findById(personVO2.getId())).withSelfRel(),
+		 linkTo(methodOn(PersonControllerV2.class).update(personVO2)).withRel("update"),
+		 linkTo(methodOn(PersonControllerV2.class).delete(personVO2.getId())).withRel("delete"));
+		return personVO2;
 	}
 
 }
