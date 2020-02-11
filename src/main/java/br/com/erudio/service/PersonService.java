@@ -1,12 +1,11 @@
 package br.com.erudio.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
-import javax.print.attribute.standard.Fidelity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -96,8 +95,14 @@ public class PersonService {
 		return converter.convertEntityToVO(entity);
 	}
 
-	public List<PersonVO2> findAllV2() {
-		return repository.findAll().stream().map(obj -> converter.convertEntityToVO(obj)).collect(Collectors.toList());
+	public Page<PersonVO2> findAllV2(PageRequest pageable) {
+		Page<Person> page = repository.findAll(pageable);
+		return page.map(obj -> converter.convertEntityToVO(obj));
+	}
+	
+	public Page<PersonVO2> findPersonByName(String firstName, PageRequest pageable) {
+		Page<Person> page = repository.findPersonByName(firstName, pageable);
+		return page.map(obj -> converter.convertEntityToVO(obj));
 	}
 	
 	@Transactional //Devido ser uma query de modificação que não é padrao, tem que colocar Transactional

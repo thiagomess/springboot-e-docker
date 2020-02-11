@@ -1,9 +1,9 @@
 package br.com.erudio.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import br.com.erudio.converts.DozerConverter;
@@ -32,9 +32,14 @@ public class BookService {
 		return DozerConverter.parseObject(data, BookVO.class);
 	}
 
-	public List<BookVO> findAll() {
-		List<Book> listBook = repository.findAll();
-		return DozerConverter.parseListObjects(listBook, BookVO.class);
+	public Page<BookVO> findAll(PageRequest pageable) {
+		Page<Book> page = repository.findAll(pageable);
+//		return page.map(x -> DozerConverter.parseObject(x, BookVO.class)); PODERIA SER ASSIM ESSE MAP
+		 return page.map(this::convertToVO);
+	}
+	
+	private BookVO convertToVO(Book book) {
+		return DozerConverter.parseObject(book, BookVO.class);
 	}
 
 	public BookVO update(BookVO bookVO) {

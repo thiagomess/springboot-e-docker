@@ -3,11 +3,12 @@ package br.com.erudio.controller;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.List;
-
-import javax.sound.midi.Patch;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.erudio.data.vo.PersonVO2;
@@ -32,6 +34,9 @@ public class PersonControllerV2 {
 
 	@Autowired
 	private PersonService service;
+	
+	@Autowired
+	private PagedResourcesAssembler<PersonVO2> assembler;
 
 	//@CrossOrigin Permite cross somente neste metodo
 	@ApiOperation(value = "Find for id")
@@ -46,14 +51,44 @@ public class PersonControllerV2 {
 //	@CrossOrigin(origins = {"http://localhost8080","http//google.com"})// Permite cross somente neste metodo para esses sites
 	@ApiOperation(value = "Find all person")
 	@GetMapping(produces = { "application/json", "application/xml", "application/x-yaml" })
-	public List<PersonVO2> findAll() {
-		 List<PersonVO2> listPerson = service.findAllV2();
+	public ResponseEntity<?> findAll( 
+				@RequestParam(value = "page", defaultValue = "0") int page, 
+				@RequestParam(value = "limit", defaultValue = "12") int limit,
+				@RequestParam(value = "direction", defaultValue = "asc") String direction){
+		
+		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+		PageRequest pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+		
+		 Page<PersonVO2> listPerson = service.findAllV2(pageable);
 		 listPerson.stream().forEach(p -> p.add(
 					linkTo(methodOn(PersonControllerV2.class).findById(p.getId())).withSelfRel(),
 					 linkTo(methodOn(PersonControllerV2.class).update(p)).withRel("update"),
 					 linkTo(methodOn(PersonControllerV2.class).delete(p.getId())).withRel("delete")
 					));
-			return listPerson;
+		 
+		 return ResponseEntity.ok(assembler.toModel(listPerson)); //adiciona  HATEOAS no retorno da lista
+	}
+	
+	
+	@ApiOperation(value = "Find all person by name for parameter")
+	@GetMapping(value = "/findPersonByName/{firstName}", produces = { "application/json", "application/xml", "application/x-yaml" })
+	public ResponseEntity<?> findAllPersonByName( 
+				@PathVariable("firstName") String firstName, //RECEBE PathVariable PARA DAR LIKE
+				@RequestParam(value = "page", defaultValue = "0") int page, 
+				@RequestParam(value = "limit", defaultValue = "12") int limit,
+				@RequestParam(value = "direction", defaultValue = "asc") String direction){
+		
+		var sortDirection = "desc".equalsIgnoreCase(direction) ? Direction.DESC : Direction.ASC;
+		PageRequest pageable = PageRequest.of(page, limit, Sort.by(sortDirection, "firstName"));
+		
+		 Page<PersonVO2> listPerson = service.findPersonByName(firstName, pageable);
+		 listPerson.stream().forEach(p -> p.add(
+					linkTo(methodOn(PersonControllerV2.class).findById(p.getId())).withSelfRel(),
+					 linkTo(methodOn(PersonControllerV2.class).update(p)).withRel("update"),
+					 linkTo(methodOn(PersonControllerV2.class).delete(p.getId())).withRel("delete")
+					));
+		 
+		 return ResponseEntity.ok(assembler.toModel(listPerson));//adiciona  HATEOAS no retorno da lista
 	}
 
 	@ApiOperation(value = "Include person")
