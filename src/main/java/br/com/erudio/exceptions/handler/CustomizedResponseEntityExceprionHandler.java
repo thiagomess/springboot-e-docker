@@ -11,6 +11,8 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import br.com.erudio.exceptions.ExceptionResponse;
+import br.com.erudio.exceptions.FileStorageException;
+import br.com.erudio.exceptions.MyFileNotFoundException;
 import br.com.erudio.exceptions.ResourceNotFoundException;
 import br.com.erudio.exceptions.UnsupportedMathOperationException;
 
@@ -40,6 +42,22 @@ public class CustomizedResponseEntityExceprionHandler extends ResponseEntityExce
 				"Bad Request", ex.getMessage(), request.getDescription(false));
 
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+	}
+	
+	@ExceptionHandler(FileStorageException.class)
+	public final ResponseEntity<ExceptionResponse> FileStorageException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.INTERNAL_SERVER_ERROR.value(),
+				"Internal Server Error", ex.getMessage(), request.getDescription(false));
+
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	@ExceptionHandler(MyFileNotFoundException.class)
+	public final ResponseEntity<ExceptionResponse> MyFileNotFoundException(Exception ex, WebRequest request) {
+		ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), HttpStatus.NOT_FOUND.value(),
+				"Not Found", ex.getMessage(), request.getDescription(false));
+
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
 	
 }
