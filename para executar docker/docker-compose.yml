@@ -1,0 +1,43 @@
+version: '3.7'
+services:
+    db:
+        image: thiagogomes19/mysql-springboot-e-docker
+        command: 'mysqld --default-authentication-plugin=mysql_native_password'
+        restart: always
+        build: 
+            context: .
+            dockerfile: Dockerfile        
+        environment:
+            TZ: America/Sao_Paulo
+            MYSQL_ROOT_PASSWORD: docker
+            MYSQL_USER: docker
+            MYSQL_PASSWORD: docker
+            MYSQL_DATABASE: springboot-docker
+        ports: 
+            - "3308:3306"
+        networks: 
+            - udemy-network
+    rest-with-springboot-udemy:
+        image: thiagogomes19/springboot-e-docker
+        restart: always
+        build: ./springboot-e-docker
+        working_dir: /springboot-e-docker
+
+        environment:
+            TZ: America/Sao_Paulo
+            SPRING_BOOT_ENVIRONMENT: Production
+        volumes:
+            - './springboot-e-docker:/springboot-e-docker'
+            - '~/.m2:/root/.m2'
+        ports:
+            - "8080:8080"
+        command: 'mvn clean spring-boot:run'
+        links:
+            - db
+        depends_on:
+            - db
+        networks:
+            - udemy-network
+networks:
+    udemy-network:
+        driver: bridge
