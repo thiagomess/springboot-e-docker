@@ -10,7 +10,6 @@ before_deploy:
 deploy:
   provider: script
   script:
-    docker push thiagomess/mysql-springboot-e-docker;
     docker push thiagomess/springboot-e-docker;
   on:
     branch: master
