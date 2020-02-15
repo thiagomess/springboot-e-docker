@@ -1,7 +1,7 @@
 version: '3.7'
 services:
     db:
-        image: thiagogomes19/mysql-springboot-e-docker
+        image: thiagomess/mysql-springboot-e-docker
         command: 'mysqld --default-authentication-plugin=mysql_native_password'
         restart: always
         build: 
@@ -18,7 +18,7 @@ services:
         networks: 
             - udemy-network
     rest-with-springboot-udemy:
-        image: thiagogomes19/springboot-e-docker
+        image: thiagomess/springboot-e-docker
         restart: always
         build: ./springboot-e-docker
         working_dir: /springboot-e-docker
