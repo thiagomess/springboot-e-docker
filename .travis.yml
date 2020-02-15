@@ -1,4 +1,6 @@
-language: bash
+language: java
+jdk:
+  - oraclejdk11
 services: docker
 #before_install:
 #  - cd 17\ RestWithSpringBootUdemy\ Docker/
