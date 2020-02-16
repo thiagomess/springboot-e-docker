@@ -28,7 +28,7 @@ public class SwaggerConfig {
 	}
 	
 	private ApiInfo apiInfo() {
-		return new ApiInfo("Restfull Api with Spring Boot 2.2.4", 
+		return new ApiInfo("Restfull Api with Spring Boot 2.2.4 em AWS", 
 				"Description of API", 
 				"v1",
 				"Terms Of Service Url",
