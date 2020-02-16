@@ -26,7 +26,7 @@ deploy:
   on:
     branch: master
 after_sucess:
-    #configurações para subir para a imagem para o ECR
+  #configurações para subir para a imagem para o ECR
   - sudo apt-get -y install python3-pip python-dev
   - sudo pip3 install -U setuptools
   - sudo pip3 install -U virtualenwrapper
