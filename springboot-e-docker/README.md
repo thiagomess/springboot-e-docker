@@ -25,7 +25,6 @@ cd ./springboot-e-docker/springboot-e-docker/
 mvn clean package install -DskipTests
 mvn spring-boot:run
 ```
-E acessar a URL: http://localhost:8080/swagger-ui.html
 
 #####  Via Docker
 
@@ -34,3 +33,13 @@ Esta disponibilizado uma imagem no docker Hub com o nome thiagomess/springboot-e
 docker pull thiagomess/springboot-e-docker:1.0.0
 docker run --rm -p 8080:8080 thiagomess/springboot-e-docker:1.0.0
 ````
+#####  Para acessar a aplicação
+
+URL: http://localhost:8080/swagger-ui.html
+Realizando o login com:
+user: admin 
+password: admin123
+```sh
+O token deve ser passado nas requições: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbiIsImV4cCI6MTU4MTg5NDA4MH0.8lqLGlNfA4DHcqY0GONj7CGNOGeVN_je1PXTqbnLp8V5xdSJsm0fLsRFM7CG5GOBv1wSS3PzqhK3UaIKCA6-bg"
+```
+
