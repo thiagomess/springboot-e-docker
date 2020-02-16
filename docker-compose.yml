@@ -15,7 +15,7 @@ services:
         networks: 
             - udemy-network
     rest-with-springboot-udemy:
-        image: thiagomess/springboot-e-docker
+        image: springboot-e-docker
         restart: always
         build: ./springboot-e-docker
         working_dir: /springboot-e-docker

@@ -1,19 +1,42 @@
+sudo: required
+dist: bionic
 language: java
 jdk:
-  - oraclejdk11
+    - oraclejdk11
+python:
+  - "3.6"
 services: docker
-#before_install:
-#  - cd 17\ RestWithSpringBootUdemy\ Docker/
-#  - echo "We are in the Docker folder!!!"
+before_install:
+  - sudo apt-get update
+  - cd springboot-e-docker
+  - echo "Realizando comandos Maven!!!"
+  - mvn clean package
+  - cd ..
+  - echo "Voltou para pasta do docker!!!"
 script:
+  - echo "Executando o docker-compose!!!"
   - docker-compose build
 before_deploy:
   - echo "${DOCKER_PASSWORD}" | docker login --username "${DOCKER_USERNAME}" --password-stdin
 deploy:
   provider: script
   script:
-    docker push thiagomess/springboot-e-docker;
+    docker tag springboot-e-docker:latest thiagomess/springboot-e-docker:$TRAVIS_JOB_ID
+    docker push thiagomess/springboot-e-docker:$TRAVIS_JOB_ID;
   on:
     branch: master
+after_sucess:
+  - sudo apt-get -y install python3-pip python-dev
+  - sudo pip3 install -U setuptools
+  - sudo pip3 install -U virtualenwrapper
+  - python3 -V
+  - pip3 -V
+  - pip3 uinstall wheel
+  - pip3 install wheel
+  - pip3 install awscli --upgrade --user
+  - export PATH=$PATH:$HOME/.local/bin
+  - eval $(aws ecr get-login --no-include-email --region $AWS_DEFAULT_REGION)
+  - docker tag springboot-e-docker:latest $IMAGE_REPO_URL:$TRAVIS_JOB_ID
+  - docker push $IMAGE_REPO_URL:$TRAVIS_JOB_ID
 notifications:
   email: false
